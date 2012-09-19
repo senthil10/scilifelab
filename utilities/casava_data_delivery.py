@@ -7,7 +7,7 @@ from datetime import datetime
 import optparse
 
 def_casava_path = '/proj/a2010002/nobackup/illumina/'
-def_log_path = '/proj/a2010002/private/delivery_logs' # '/bubo/home/h9/mikaelh/delivery_logs/'
+def_log_path = '/proj/a2010002/private/delivery_logs/' # '/bubo/home/h9/mikaelh/delivery_logs/'
 
 def fixProjName(pname):
     newname = pname[0].upper()

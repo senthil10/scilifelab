@@ -188,9 +188,12 @@ def make_notes_for_fc_proj(fc="BC0HYUACXX", prj="J.Lindberg_12_01", opts=None):
                         results = qc.query(ps_map_fun)
                         for r in results:
                             if prj == r['key']['Project_id']:
-                                cust_ref = r['key']['Customer_reference']
-                                parameters['customer_reference'] = cust_ref
-                    print "Customer reference value: ", parameters['customer_reference']
+                                if r['key'].has_key('Customer_reference'):
+                                    customer_ref = r['key']['Customer_reference']
+                                    parameters['customer_reference'] = customer_ref
+                                else: 
+                                    print "WARNING: No Customer_reference tag found in ProjectSummary"
+                                    parameters['customer_reference'] = customer_ref
 
                     # Uppnex ID (can be manually provided by user)
                     #print "Uppmax ID from command line: ", opts.uppnex_id
