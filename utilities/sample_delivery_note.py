@@ -160,14 +160,20 @@ def make_notes_for_fc_proj(fc="BC0HYUACXX", prj="J.Lindberg_12_01", opts=None):
         short_fc_name = full_fc_name.split("_")[-1]
         if short_fc_name == fc: 
             found_fc = True
+            print "FlowcellQCMetrics document: ", res.id
             fc_doc = doc
 
     # Identify the correct ProjectSummary document. We will need this for a lot of things.
     for res in qc.view("_design/entitytypes/_view/ProjectSummary"):
         doc = qc[res.id]
+        # print doc['Project_id']
         if doc['Project_id'] == prj:
             found_proj_for_fc = True
             prj_doc = doc
+            print "ProjectSummary document ID: ", res.id
+
+    if found_proj_for_fc == False:
+        sys.exit("Could not find project ID!")
 
     avail_proj = set()
     error_rates = {}
@@ -176,7 +182,7 @@ def make_notes_for_fc_proj(fc="BC0HYUACXX", prj="J.Lindberg_12_01", opts=None):
     try:
                     
         # Now we fill in the parameters dictionary for generating the report
-
+        
         # Project ID
         assert(prj_doc['Project_id'] == prj)
         parameters['project_name'] = prj_doc['Project_id']
@@ -272,7 +278,7 @@ def make_notes_for_fc_proj(fc="BC0HYUACXX", prj="J.Lindberg_12_01", opts=None):
                             lane = qc[entry]['lane']
                             try:
                                 lane_metrics = fc_doc['metrics']['illumina']['Summary']
-                                phix_err = 0.5 * ( float(lane_metrics['read1'][lane]['ErrRatePhiX']) + float(float(lane_metrics['read2'][lane]['ErrRatePhiX'])))
+                                phix_err = 0.5 * ( float(lane_metrics['read1'][lane]['ErrRatePhiX']) + float(float(lane_metrics['read3'][lane]['ErrRatePhiX'])))
                                 parameters['phix_error_rate'] = str(phix_err)
                                 if phix_err > phix_err_cutoff:
                                     print "WARNING: High error rate. "
@@ -291,9 +297,10 @@ def make_notes_for_fc_proj(fc="BC0HYUACXX", prj="J.Lindberg_12_01", opts=None):
                             print "WARNING: Could not get FastQC quality scores from ", entry
                             parameters['avg_quality_score'] = "N/A"
                         qvs[s] = str(parameters['avg_quality_score'])
-
 #                        print parameters
                         make_note(parameters)
+            else:
+                print "WARNING: Could not find SampleQCMetrics document for sample ", s
     except:
         print "Could not fetch all info from StatusDB"
         sys.exit(0)

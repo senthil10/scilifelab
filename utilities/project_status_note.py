@@ -258,7 +258,7 @@ def make_status_note(prj="", opts=None):
                     if counts_from_sqcm >= 1000000 * int(opts.ordered_million): status = "P"
                 else: status = "N/A"
 
-            if status == "NP": all_passed = False
+            if status == "NP" or status == "N/A": all_passed = False
             row.append(status)
             sample_table.append(row)
     except: 
