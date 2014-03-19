@@ -394,7 +394,20 @@ class SampleRunMetricsConnection(Couch):
         inv_view = {v:k for k,v in self.name_view.iteritems()}
         sample_names = [inv_view[x] for x in sample_ids]
         return [self.get_entry(x) for x in sample_names]
-
+    
+    def get_project_sample(self, prj_sample_name, sample_prj=None, fc_id=None):
+        """Retrieve all documents for a project sample based on the project_sample_name field,
+        possibly subset by sample_prj and fc_id
+        
+        :param prj_sample_name: project sample name
+        :param sample_prj: Name of the project
+        :param fc_id: Flowcell id
+        
+        :returns samples: list of sample_run_metrics documents
+        """
+        
+        return [s for s in self.get_samples(fc_id,sample_prj) if s.get("project_sample_name","") == prj_sample_name]
+        
 class FlowcellRunMetricsConnection(Couch):
     _doc_type = FlowcellRunMetricsDocument
     _update_fn = update_fn
