@@ -31,7 +31,7 @@ def report(ctrl, project_name, **kw):
     """
     
     notes = project_summary_report(ctrl,project_name,**kw)
-    write_rest_note("test.rst","/Users/pontus/Downloads/",contents=notes)
+    write_rest_note("report_test.rst","/home/senthilp/glob/private/deliv_reports/",contents=notes)
 
 def project_summary_report(ctrl, project_name, sample_name=None, flowcell_id=None, **kw):
     """Generate and render a summary report for a project, consisting of a general summary, a
